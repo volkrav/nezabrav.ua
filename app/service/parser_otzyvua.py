@@ -1,12 +1,13 @@
 import asyncio
-import aiohttp
-from bs4 import BeautifulSoup, Tag
-import re
 import json
 import os
+import re
 
+import aiohttp
+from bs4 import BeautifulSoup, Tag
 
 url = 'https://www.otzyvua.net/cherniy-spisok-pokupateley-nedobrosovestnye-pokupateli'
+pathdir = 'otzyvua'
 
 
 async def get_page(page: int, session: aiohttp.ClientSession) -> int:
@@ -21,8 +22,9 @@ async def get_page(page: int, session: aiohttp.ClientSession) -> int:
                     for comment_tag in comment_tags]
 
         for comment in comments:
-            if os.path.exists(f"otzyvua/{comment['id']}.json"): return count
-            with open(f"otzyvua/{comment['id']}.json", 'w', encoding='utf-8') as file:
+            if os.path.exists(f"{pathdir}/{comment['id']}.json"):
+                return count
+            with open(f"{pathdir}/{comment['id']}.json", 'w', encoding='utf-8') as file:
                 count += 1
                 file.write(json.dumps(
                     comment, indent=4, ensure_ascii=False))
@@ -81,8 +83,7 @@ def search_phone(s: str) -> str:
     return ''.join(match.group(2, 3, 4, 5))
 
 
-async def run_parser():
-    async with aiohttp.ClientSession() as session:
+async def run_parser(session: aiohttp.ClientSession):
         await crawl(session)
 
 

@@ -7,6 +7,9 @@ name = "pypi"
 aiohttp = "*"
 beautifulsoup4 = "*"
 lxml = "*"
+asyncpg = "*"
+python-dotenv = "*"
+aiofiles = "*"
 
 [dev-packages]
 
