@@ -10,6 +10,11 @@ lxml = "*"
 asyncpg = "*"
 python-dotenv = "*"
 aiofiles = "*"
+pydantic = "*"
+pydantic-settings = "*"
+fastapi = {extras = ["all"], version = "*"}
+sqlalchemy = "*"
+alembic = "*"
 
 [dev-packages]
 

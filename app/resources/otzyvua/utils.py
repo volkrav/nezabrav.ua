@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime
 import json
 import os
 from typing import Any, Dict, Generator
@@ -22,4 +23,6 @@ async def _get_file_from_dir(dirname: str) -> Generator[str, Any, None]:
 
 def _sync_open_file_for_read(dirname: str, filename: str) -> Dict:
     with open(os.path.join(dirname, filename), encoding='utf8') as data:
-        return json.loads(data.read())
+        comment = json.loads(data.read())
+        comment['date'] = datetime.strptime(comment['date'], '%Y-%m-%d %H:%M:%S')
+        return comment

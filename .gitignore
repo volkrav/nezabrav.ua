@@ -1,5 +1,7 @@
 ### Python ###
 # my
+data/
+!.keep
 .env
 .git
 *.log
@@ -204,4 +206,3 @@ pyrightconfig.json
 # Ignore all local history of files
 .history
 .ionide
-

@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime
 import json
 import os
 import re
@@ -6,8 +7,10 @@ import re
 import aiohttp
 from bs4 import BeautifulSoup, Tag
 
+from app.resources.otzyvua.dao import OtzyvuaDAO
+
 url = 'https://www.otzyvua.net/cherniy-spisok-pokupateley-nedobrosovestnye-pokupateli'
-pathdir = 'otzyvua'
+pathdir = 'app/resources/otzyvua/files'
 
 
 async def get_page(page: int, session: aiohttp.ClientSession) -> int:
@@ -22,12 +25,14 @@ async def get_page(page: int, session: aiohttp.ClientSession) -> int:
                     for comment_tag in comment_tags]
 
         for comment in comments:
-            if os.path.exists(f"{pathdir}/{comment['id']}.json"):
+            if not os.path.exists(f"{pathdir}/{comment['id']}.json"):
+                with open(f"{pathdir}/{comment['id']}.json", 'w', encoding='utf-8') as file:
+                    file.write(json.dumps(
+                        comment, indent=4, ensure_ascii=False, default=str))
+            if await OtzyvuaDAO.find_by_id(comment['id']):
                 return count
-            with open(f"{pathdir}/{comment['id']}.json", 'w', encoding='utf-8') as file:
-                count += 1
-                file.write(json.dumps(
-                    comment, indent=4, ensure_ascii=False))
+            count += 1
+            await OtzyvuaDAO.add(**comment)
 
     return count
 
@@ -47,6 +52,8 @@ def parse_comment(tag: Tag):
     try:
         h2 = tag.find('h2')
         title = h2.find('a').text.strip() if h2 else 'no title'
+        date = tag.find('span', class_='value-title').attrs['title'].strip()
+        date = datetime.strptime(date, '%Y-%m-%d')
         text = (tag.find('span', class_='review-full-text')
                 or tag.find('span', class_='review-snippet')).text.strip()
 
@@ -63,7 +70,7 @@ def parse_comment(tag: Tag):
         return {
             'id': tag.attrs['id'].strip(),
             'title': title,
-            'date': tag.find('span', class_='value-title').attrs['title'].strip(),
+            'date': date,
             'text': text,
             'phone': search_phone(title + ' ' + text),
             'advantages': advantages,
@@ -83,8 +90,9 @@ def search_phone(s: str) -> str:
     return ''.join(match.group(2, 3, 4, 5))
 
 
-async def run_parser(session: aiohttp.ClientSession):
-        await crawl(session)
+async def run_parser():
+        async with aiohttp.ClientSession() as session:
+            await crawl(session)
 
 
 if __name__ == '__main__':

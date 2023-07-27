@@ -1,12 +1,12 @@
 CREATE TABLE IF NOT EXISTS "otzyvua" (
-	"id" varchar(50) NOT NULL,
-	"title" text,
-    "date" varchar(50),
-    "text" text,
-    "phone" varchar(50),
-    "advantages" text[],
-    "disadvantages" text[],
-    "images" text[],
+	"" varchar(50) NOT NULL,
+	"" text,
+    "" varchar(50),
+    "" text,
+    "" varchar(50),
+    "" text[],
+    "" text[],
+    "" text[],
 	CONSTRAINT "otzyvua_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
