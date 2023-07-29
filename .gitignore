@@ -1,6 +1,6 @@
 ### Python ###
 # my
-data/
+/app/data/*
 !.keep
 .env
 .git
