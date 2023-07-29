@@ -1,4 +1,5 @@
 from typing import Any
+
 from sqlalchemy import Insert, MappingResult, Result, Select, insert, select
 from sqlalchemy.orm import Session
 
@@ -29,7 +30,7 @@ class BaseDAO:
     @classmethod
     async def find_all_filter_by(cls, **filters) -> MappingResult:
         session: Session
-        async with async_session_maker as session:
+        async with async_session_maker() as session:
             query: Select = select(
                 cls.model.__table__.columns).filter_by(**filters)
             result: Result = await session.execute(query)

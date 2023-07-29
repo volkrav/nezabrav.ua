@@ -11,6 +11,7 @@ async def main():
     await run_parser()
     # await insert_data_to_db_from_files(tablename='otzyvua', dirname='otzyvua')
     # await insert_data_to_db('app/resources/otzyvua/files')
+    # await get_data()
 
 
 if __name__ == '__main__':

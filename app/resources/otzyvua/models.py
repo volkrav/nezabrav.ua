@@ -2,7 +2,7 @@ from sqlalchemy import ARRAY, JSON, Column, Date, String
 from app.database import Base
 
 
-class OtzyvuaComments(Base):
+class OtzyvuaComment(Base):
     __tablename__ = 'otzyvua'
 
     id = Column(String, primary_key=True, nullable=False)

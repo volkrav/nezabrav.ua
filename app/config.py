@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
+    BLACKBOX_API: str
+    BLACKBOX_URL: str
 
     @computed_field
     @cached_property

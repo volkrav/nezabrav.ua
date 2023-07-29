@@ -2,7 +2,7 @@ from datetime import date
 from typing import List
 from pydantic import BaseModel
 
-class SOtzyvuaComments(BaseModel):
+class SOtzyvuaComment(BaseModel):
     id: str
     title: str
     date: date
