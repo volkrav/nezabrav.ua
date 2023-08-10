@@ -16,6 +16,6 @@ class BlackboxComment(Base):
     # comment = Column(String, nullable=True)
     # cost = Column(String, nullable=True)
     # !did not find the format of the returned string wit the date
-    # date = Column(String, nullable=True) #
-    # type = Column(Date, nullable=True)
+    # date = Column(Date, nullable=True) # "28.10.2021 14:25:10"
+    # type = Column(String, nullable=True) # "Нова Пошта"
     # warehouse = Column(Date, nullable=True)

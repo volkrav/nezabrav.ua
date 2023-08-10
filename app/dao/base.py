@@ -17,7 +17,7 @@ class BaseDAO:
                 **data).returning(cls.model.id)
             result: Result = await session.execute(query)
             await session.commit()
-            return result.scalar()
+        return result.scalar()
 
     @classmethod
     async def find_by_id(cls, model_id: int | str) -> Any | None:

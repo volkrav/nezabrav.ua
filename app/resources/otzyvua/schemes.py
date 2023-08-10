@@ -4,13 +4,13 @@ from pydantic import BaseModel
 
 class SOtzyvuaComment(BaseModel):
     id: str
-    title: str
+    title: str | None
     date: date
-    text: str
-    phone: str
-    advantages: str
-    disadvantages: str
-    images: List[str]
+    text: str | None
+    phone: str | None
+    advantages: str | None
+    disadvantages: str | None
+    images: List[str] | None
 
     class Config:
         from_attributes = True
