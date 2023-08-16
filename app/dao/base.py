@@ -28,6 +28,15 @@ class BaseDAO:
             return result.scalar_one_or_none()
 
     @classmethod
+    async def find_one_or_none(cls, **filters):
+        session: Session
+        async with async_session_maker() as session:
+            query: Select = select(cls.model).filter_by(**filters)
+            result: Result = await session.execute(query)
+            return result.scalar_one_or_none()
+
+
+    @classmethod
     async def find_all_filter_by(cls, **filters) -> MappingResult:
         session: Session
         async with async_session_maker() as session:
