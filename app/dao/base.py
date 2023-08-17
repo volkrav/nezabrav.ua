@@ -4,6 +4,7 @@ from sqlalchemy import Insert, MappingResult, Result, Select, insert, select
 from sqlalchemy.orm import Session
 
 from app.database import Base, async_session_maker
+from app.exceptions import NoDatabaseConnection
 
 
 class BaseDAO:
@@ -15,8 +16,11 @@ class BaseDAO:
         async with async_session_maker() as session:
             query: Insert = insert(cls.model).values(
                 **data).returning(cls.model.id)
-            result: Result = await session.execute(query)
-            await session.commit()
+            try:
+                result: Result = await session.execute(query)
+                await session.commit()
+            except ConnectionRefusedError as e:
+                raise NoDatabaseConnection
         return result.scalar()
 
     @classmethod
@@ -24,7 +28,10 @@ class BaseDAO:
         session: Session
         async with async_session_maker() as session:
             query: Select = select(cls.model).filter_by(id=model_id)
-            result: Result = await session.execute(query)
+            try:
+                result: Result = await session.execute(query)
+            except ConnectionRefusedError as e:
+                raise NoDatabaseConnection
             return result.scalar_one_or_none()
 
     @classmethod
@@ -32,7 +39,10 @@ class BaseDAO:
         session: Session
         async with async_session_maker() as session:
             query: Select = select(cls.model).filter_by(**filters)
-            result: Result = await session.execute(query)
+            try:
+                result: Result = await session.execute(query)
+            except ConnectionRefusedError as e:
+                raise NoDatabaseConnection
             return result.scalar_one_or_none()
 
 
@@ -42,5 +52,8 @@ class BaseDAO:
         async with async_session_maker() as session:
             query: Select = select(
                 cls.model.__table__.columns).filter_by(**filters)
-            result: Result = await session.execute(query)
+            try:
+                result: Result = await session.execute(query)
+            except ConnectionRefusedError as e:
+                raise NoDatabaseConnection
             return result.mappings().all()

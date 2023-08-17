@@ -9,5 +9,5 @@ router = APIRouter(
 
 
 @router.get('/{phone}')
-async def get_customer_from_blackbox(phone: str) -> SResponseMessageFromBlackbox:
+async def get_customer_from_blackbox(phone: str):
     return await get_comment_from_blackbox(phone)
