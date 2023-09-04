@@ -1,62 +1,53 @@
 import asyncio
 import json
 from datetime import datetime
-from pprint import pprint
 from typing import Dict, List
 
-import aiofiles
 import aiohttp
 from pydantic import Json
 
 from app.config import settings
-from app.exceptions import (BlackboxRequestTimeoutExpired,
-                            ClientNotFoundInBlackbox, GetErrorFromApiBlackbox)
+from app.exceptions import GetErrorFromBlackbox
 from app.reports.dao import ReportsDAO
-from app.reports.models import ESource
-
-# from app.resources.blackbox.dao import BlackboxDAO
-# from app.resources.blackbox.schemes import SResponseMessageFromBlackbox
+from app.reports.models import ESource, Reports
 
 
-async def processing_reports_from_blackbox(reports: List):
-    for report in reports:
-        if not await ReportsDAO.find_one_or_none(ext_id=report['ext_id']):
+async def fetch(phone: str):
+    timeout = aiohttp.ClientTimeout(total=10)
+    async with aiohttp.ClientSession() as session:
+        request_data = await make_request_data(phone)
+        async with session.get(url=f'{settings.BLACKBOX_URL}{request_data}', timeout=timeout) as response:
+            if response.status == 200:
+                return await response.json(content_type='text/html', encoding='utf-8')
+
+
+async def store_reports_from_blackbox_to_db(phone: str, reports: List[Reports] | None):
+    await ReportsDAO.delete(phone=phone, source=ESource.blackbox)
+    if reports:
+        for report in reports:
             await ReportsDAO.add(**report)
 
 
-async def get_comment_from_blackbox(phone: str):
-    timeout = aiohttp.ClientTimeout(total=20)
-    session: aiohttp.ClientSession
-    async with aiohttp.ClientSession() as session:
-        request_data = await make_request_data(phone)
-        try:
-            async with session.get(url=f'{settings.BLACKBOX_URL}{request_data}', timeout=timeout) as response:
-                if response.status == 200:
-                    response_data = await response.json(content_type='text/html', encoding='utf-8')
-        except TimeoutError:
-            raise BlackboxRequestTimeoutExpired
-        except Exception as err:
-            print(f'Exception: {err}')
+async def get_reports_from_blackbox(phone: str):
+    # print("work get_reports_from_blackbox")
     # customer = 'app/resources/files/0960968496.json'
     # client_not_found = 'app/resources/files/client_not_found.json'
     # error = 'app/resources/files/error.json'
-    # with open(client_not_found, 'r') as file:
+    # with open(customer, 'r') as file:
     #     response_data = json.loads(file.read())
 
+    response_data = await fetch(phone)
     if response_data:
-        reports = await parse_comment(response_data)
-        await processing_reports_from_blackbox(reports)
-        return reports
+        return await parse_response(response_data)
 
 
-async def parse_comment(content: Dict):
-    client_found = content.get('message') == None
-    if not client_found:
-        raise ClientNotFoundInBlackbox
+async def parse_response(content: Dict):
     get_error = content.get('error')
     if get_error:
-        GetErrorFromApiBlackbox.detail = f"{get_error['message']} (code {get_error['code']})"
-        raise GetErrorFromApiBlackbox
+        raise GetErrorFromBlackbox(get_error)
+    client_found = content.get('message') == None
+    if not client_found:
+        return None
     if content.get('success') and client_found:
         reports = []
         for _, data in content['data'].items():
@@ -92,4 +83,4 @@ async def make_request_data(phone: str) -> Json:
 
 
 if __name__ == '__main__':
-    asyncio.run(get_comment_from_blackbox('0960968496'))
+    asyncio.run(get_reports_from_blackbox('0960968496'))

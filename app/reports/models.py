@@ -13,6 +13,11 @@ class ESource(enum.Enum):
     otzyvua = 'otzyvua'
 
 
+class EStatusBlackbox(enum.Enum):
+    online = 'online'
+    offline = 'offline'
+
+
 class Reports(Base):
     __tablename__ = 'reports'
 

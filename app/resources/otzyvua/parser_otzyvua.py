@@ -1,15 +1,13 @@
 import asyncio
-from datetime import datetime
-import enum
 import json
 import os
 import re
+from datetime import datetime
 
 import aiohttp
 from bs4 import BeautifulSoup, Tag
 
 from app.reports.dao import ReportsDAO
-
 from app.reports.models import ESource
 
 
@@ -31,7 +29,6 @@ async def get_page(page: int, session: aiohttp.ClientSession) -> int:
                 if comment:
                     comments.append(comment)
 
-
         for comment in comments:
             if not os.path.exists(f"{pathdir}/{comment['ext_id']}.json"):
                 with open(f"{pathdir}/{comment['ext_id']}.json", 'w', encoding='utf-8') as file:
@@ -41,7 +38,6 @@ async def get_page(page: int, session: aiohttp.ClientSession) -> int:
                 return count
             count += 1
             await ReportsDAO.add(**comment)
-
     return count
 
 
@@ -60,11 +56,12 @@ def parse_comment(tag: Tag):
     try:
         h2 = tag.find('h2')
         title = h2.find('a').text.strip() if h2 else ''
-        str_date = tag.find('span', class_='value-title').attrs['title'].strip()
+        str_date = tag.find(
+            'span', class_='value-title').attrs['title'].strip()
         date = datetime.strptime(str_date, '%Y-%m-%d')
 
         text_with_newlines = (tag.find('span', class_='review-full-text')
-                or tag.find('span', class_='review-snippet'))
+                              or tag.find('span', class_='review-snippet'))
         if text_with_newlines.find('br'):
             text = ''
             for e in text_with_newlines.descendants:
@@ -114,8 +111,8 @@ def search_phone(s: str) -> str:
 
 
 async def run_parser():
-        async with aiohttp.ClientSession() as session:
-            await crawl(session)
+    async with aiohttp.ClientSession() as session:
+        await crawl(session)
 
 
 if __name__ == '__main__':
