@@ -5,9 +5,8 @@ from os.path import abspath, dirname
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 from app.database import Base
-from app.resources.otzyvua.models import OtzyvuaComment
-from app.resources.blackbox.models import BlackboxComment
 from app.reports.models import Reports
+from app.users.models import Users
 from app.config import settings
 
 sys.path.insert(0, dirname(dirname(abspath(__name__))))

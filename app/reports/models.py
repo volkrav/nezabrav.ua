@@ -2,9 +2,9 @@ import enum
 
 from sqlalchemy import (ARRAY, Column, DateTime, Enum, ForeignKey, Integer,
                         String, func)
+from sqlalchemy.orm import relationship, Mapped
 
 from app.database import Base
-from app.users.models import Users
 
 
 class ESource(enum.Enum):
@@ -38,3 +38,5 @@ class Reports(Base):
     shipment_date = Column(DateTime, nullable=True)
     images = Column(ARRAY(String), nullable=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
+
+    # user: Mapped['Users'] = relationship(back_populates='report')
