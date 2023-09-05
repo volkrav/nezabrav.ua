@@ -1,7 +1,7 @@
 import enum
 from typing import List
 
-from sqlalchemy import Column, Enum, Integer, String
+from sqlalchemy import Column, DateTime, Enum, Integer, String
 from sqlalchemy.orm import relationship, Mapped
 
 from app.database import Base
@@ -23,7 +23,7 @@ class Users(Base):
     company = Column(String, nullable=False)
     phone = Column(String, nullable=False)
     site = Column(String, nullable=True)
-    registration_date = Column(String, nullable=True)
+    registration_date = Column(DateTime, nullable=False)
     role = Column(Enum(ERole), nullable=False, default=ERole.user)
 
     # report: Mapped[List['Reports']] = relationship(back_populates='user')
