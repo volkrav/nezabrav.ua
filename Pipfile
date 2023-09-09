@@ -15,8 +15,13 @@ pydantic-settings = "*"
 fastapi = {extras = ["all"], version = "*"}
 sqlalchemy = "*"
 alembic = "*"
+python-jose = {extras = ["cryptography"], version = "*"}
+passlib = {extras = ["bcrypt"], version = "*"}
+python-multipart = "*"
 
 [dev-packages]
+pytest = "*"
+pytest-asyncio = "*"
 
 [requires]
 python_version = "3.11"

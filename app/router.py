@@ -33,4 +33,5 @@ async def get_customer_from_blackbox(phone: str):
 async def get_customer_from_otzyvua(phone: str):
     return {
         'reports': await ReportsDAO.find_all_filter_by(phone=phone, source=ESource.otzyvua),
+        'status_blackbox': EStatusBlackbox.offline,
     }
