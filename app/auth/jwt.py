@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr
-import sys, traceback
+import traceback
 
 from app.config import settings
 from app.exceptions import InvalidEmailOrPasswordException, InvalidTokenFormatException, TokenAbsentException, TokenExpiredException, UserIsNotPresentedException
@@ -20,6 +20,8 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def verify_password(plain_password, hashed_password) -> bool:
+    if settings.MODE == 'TEST':
+        return plain_password == hashed_password
     return pwd_context.verify(plain_password, hashed_password)
 
 

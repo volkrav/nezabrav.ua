@@ -14,6 +14,7 @@ class BaseDAO:
 
     @classmethod
     async def add(cls, **data) -> Any | None:
+        print(data)
         session: Session
         async with async_session_maker() as session:
             query: Insert = insert(cls.model).values(

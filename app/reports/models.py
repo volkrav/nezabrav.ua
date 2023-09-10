@@ -12,6 +12,8 @@ class ESource(enum.Enum):
     blackbox = 'blackbox'
     otzyvua = 'otzyvua'
 
+class ECarriers(enum.Enum):
+    nova_poshta = 'Nova Poshta'
 
 class EStatusBlackbox(enum.Enum):
     online = 'online'

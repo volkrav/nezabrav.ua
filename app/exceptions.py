@@ -64,3 +64,6 @@ class TokenAbsentException(HTTPException):
 
 class GetErrorFromBlackbox(Exception):
     pass
+
+class GetErrorFromNovaposhta(Exception):
+    pass

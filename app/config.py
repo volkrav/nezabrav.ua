@@ -26,6 +26,7 @@ class Settings(BaseSettings):
 
     BLACKBOX_API: str
     BLACKBOX_URL: str
+    NOVAPOSHTA_API_URL: str
     SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
