@@ -1,6 +1,7 @@
 ### Python ###
 # my
 /app/data/*
+*.DS_Store
 !.keep
 .env
 .git

@@ -53,13 +53,13 @@ async def add_report(form_data: SAddReport):
         report_dict = await make_report_from_tracking(tracking_dict, form_data)
         await ReportsDAO.add(**report_dict)
         return {
-            'succes': True,
+            'success': True,
             'message': (f"Покупець {report_dict['name']}, "
                         f"номер телефону {report_dict['phone']}, "
                         f"внесений до реєстру згідно ЕН {report_dict['TTN']}"),
         }
     except Exception as err:
         return {
-            'succes': False,
+            'success': False,
             'message': err.args[0] if err.args else "Unspecified error",
         }
