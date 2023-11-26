@@ -42,4 +42,4 @@ class EStatus(Enum, metaclass=MyMeta):
     forwarding = '104' # Змінено адресу
     storage_stopped = '105' # Припинено зберігання
     test = '7'
-    # test_ = '8'
+    test_ = '8'

@@ -47,7 +47,7 @@ async def parse_response(content: Dict):
         raise GetErrorFromBlackbox(get_error)
     client_found = content.get('message') == None
     if not client_found:
-        return None
+        return []
     if content.get('success') and client_found:
         reports = []
         for _, data in content['data'].items():
