@@ -39,7 +39,7 @@ async def get_customer_from_otzyvua(phone: str):
     }
 
 @router.get('/nezabrav/{phone}')
-async def get_customer_from_otzyvua(phone: str):
+async def get_customer_from_nezabrav(phone: str):
     return {
         'reports': await ReportsDAO.find_all_filter_by(phone=phone, source=ESource.nezabrav),
         'status_blackbox': EStatusBlackbox.offline,

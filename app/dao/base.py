@@ -14,7 +14,6 @@ class BaseDAO:
 
     @classmethod
     async def add(cls, **data) -> Any | None:
-        print(data)
         session: Session
         async with async_session_maker() as session:
             query: Insert = insert(cls.model).values(
@@ -47,7 +46,7 @@ class BaseDAO:
             except ConnectionRefusedError as e:
                 raise NoDatabaseConnection()
             except OSError as e:
-                print(e)
+                # print(e) ! logging
                 exit(1)
         return result.scalar_one_or_none()
 
